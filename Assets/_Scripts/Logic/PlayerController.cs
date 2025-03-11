@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
         col = GetComponent<Collider>();
         freeLookCamera = FindAnyObjectByType<CinemachineCamera>();
     }
+
     private void Update()
     {
         transform.rotation = Quaternion.Euler(0, freeLookCamera.transform.rotation.eulerAngles.y, 0);
@@ -69,6 +70,11 @@ public class PlayerController : MonoBehaviour
         float angle = collision.contacts.Sum(contact => Vector3.Angle(contact.normal, Vector3.up)) / contactCount;
         // swapping out materials to avoid sticking on the walls
         col.material = angle > 45 ? smooth : rough;
+    }
+
+    public void UpdatePlayerMaxSpeed(float speed)
+    {
+        maxSpeed = speed;
     }
 
     private bool IsTouchingGround() => Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.1f, groundLayer);
@@ -111,9 +117,5 @@ public class PlayerController : MonoBehaviour
         isDashing = true;
         rb.linearVelocity = Vector3.zero;
         rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
-    }
-
-    public void UpdatePlayerMaxSpeed(float speed) {
-        maxSpeed = speed;
     }
 }
